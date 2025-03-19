@@ -1,0 +1,78 @@
+{
+  "name": "CryptoProject",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js/hana": "^1",
+    "@sap-cloud-sdk/http-client": "^4.0.1",
+    "@sap-cloud-sdk/util": "^4.0.1",
+    "@sap/cds": "^8",
+    "@sap/low-code-event-handler": "^1.2.5",
+    "@sap/mdk-tools": "^1.12.1",
+    "@sap/xsenv": ">=3.3.2 <3.3.3",
+    "@sap/xssec": "^4.4.0",
+    "express": "^4",
+    "hdb": "^0.19.12",
+    "passport": "^0.7.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-typescript": "^7.26.0",
+    "@cap-js/cds-types": "^0.9.0",
+    "@cap-js/sqlite": "^1",
+    "@sap/dev-cap-tools": "^1.31.0",
+    "cds-plugin-ui5": "^0.9.8"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "start-local": "npm run generate-entry-point && npm run cds-watch",
+    "generate-entry-point": "dev-cap-tools gen-entrypoint",
+    "cds-watch": "cds watch --open",
+    "watch-cryptocurrency-analytics": "cds watch --open cryptocurrency-analytics/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-crypto-currency-management": "cds watch --open crypto-currency-management/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-cryptoproject.crypto": "cds watch --open cryptoproject.crypto/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-cryptocurrency": "cds watch --open cryptocurrency/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-cryptoapp": "cds watch --open ts.cryptoapp/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "watch-projectcrypto": "cds watch --open ts.projectcrypto/index.html?sap-ui-xx-viewCache=false --livereload false"
+  },
+  "cds": {
+    "sql": {
+      "native_hana_associations": false
+    },
+    "requires": {
+      "[production]": {
+        "db": "hana",
+        "auth": "xsuaa"
+      },
+      "app-service": {
+        "impl": "@sap/low-code-event-handler"
+      },
+      "auth": {
+        "[development]": {
+          "kind": "dummy"
+        },
+        "[production]": {
+          "kind": "xsuaa"
+        }
+      }
+    }
+  },
+  "lcap": true,
+  "sapux": [
+    "app/cryptocurrency-analytics",
+    "app/crypto-currency-management",
+    "app/cryptoproject.crypto",
+    "app/cryptoproject.crypto",
+    "app/cryptoproject.crypto",
+    "app/cryptocurrency",
+    "app/cryptoapp",
+    "app/projectcrypto"
+  ],
+  "workspaces": [
+    "app/*"
+  ]
+}

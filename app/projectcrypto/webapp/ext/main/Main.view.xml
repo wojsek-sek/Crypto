@@ -1,0 +1,91 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros"
+    xmlns:html="http://www.w3.org/1999/xhtml" 
+    xmlns:viz="sap.viz.ui5.controls" xmlns:layout="sap.ui.layout"
+    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
+    xmlns:viz.data="sap.viz.ui5.data"
+    xmlns:commons="sap.suite.ui.commons"
+    controllerName="ts.projectcrypto.ext.main.Main">
+    <Page id="Main" title="{i18n>MainTitle}">
+        <content>
+            <Panel id="settingsPanel" height="20%">
+                <FlexBox id="_IDGenFlexBox1" alignItems="Start">
+                    <ComboBox id="_IDGenMultiComboBox1" selectionChange="onSelectionFinishConis"
+                        items="{
+                            path: 'uniqueCoins>/items',
+                            sorter: { path: 'name', group: true }
+                        }">
+                        <core:Item id="_IDGenItem" key="{uniqueCoins>symbol}" text="{uniqueCoins>name}" />
+                         <layoutData>
+                            <FlexItemData id="_IDGenFlexItemData" growFactor="1" />
+                        </layoutData>
+                    </ComboBox>
+                    <Button id="_IDGenButton1" text="Fetch new Data" width="100%" type="Default" class="sapUiSmallMarginEnd" press="onPressFetch">
+                        <layoutData>
+                            <FlexItemData id="_IDGenFlexItemData1" growFactor="1" />
+                        </layoutData>
+                    </Button>
+                    <Button id="_IDGenButton2" text="3" width="100%" type="Accept" >
+                        <layoutData>
+                            <FlexItemData id="_IDGenFlexItemData2" growFactor="1" />
+                        </layoutData>
+                    </Button>
+                </FlexBox>
+            </Panel>
+            <Panel id="mainPanel" height="80%">
+                <commons:ChartContainer
+                    id="chartContainer"
+                    showFullScreen="true"
+                    showPersonalization="false"
+                    autoAdjustHeight="true"
+                    personalizationPress="attachPersonalizationPress"
+                    contentChange="attachContentChange"
+                    title="Coin">
+                    <commons:content>
+                        <commons:ChartContainerContent id="_IDGenChartContainerContent"
+                            icon="sap-icon://line-chart"
+                            title="Line Chart">
+						    <commons:content>
+                                <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}"
+                                    height='100%' width="100%" vizType='waterfall'
+                                    vizProperties="{ title: {text : 'Bitcoin', visible : true},
+                                    interaction: { syncValueAxis: false }, 
+                                    timeAxis: { title: { visible: false }, interval : { unit : ''} }
+                                    }">
+                                    <viz:dataset>
+                                        <viz.data:FlattenedDataset id="_IDGenFlattenedDataset1" data="{path: '/CryptoCurrencies', 
+                                        filters: [
+                                            {
+                                            path: 'symbol',
+                                            operator: 'EQ',
+                                            value1: 'BTC'
+                                            }
+                                        ]}">
+                                            <viz.data:dimensions>
+                                                <viz.data:DimensionDefinition id="_IDGenDimensionDefinition" name="timestamp"
+                                                    value="{timestamp}" dataType="date"/>
+                                            </viz.data:dimensions>
+                                            <viz.data:measures>
+                                                <viz.data:MeasureDefinition id="_IDGenMeasureDefinition" name="price"
+                                                    value="{price}" />
+                                            </viz.data:measures>
+                                        </viz.data:FlattenedDataset>
+                                    </viz:dataset>
+
+                                    <viz:feeds>
+                                        <viz.feeds:FeedItem id='valueAxisFeed' uid="valueAxis" type="Measure"
+                                            values="price" />
+                                        <viz.feeds:FeedItem id='categoryAxisFeed' uid="categoryAxis" type="Dimension"
+                                            values="timestamp" />
+                                    </viz:feeds>
+                                    <viz:dependents>
+                                        <viz:Popover id="idPopOver"></viz:Popover>
+                                    </viz:dependents>
+                                </viz:VizFrame> 
+                            </commons:content>
+                        </commons:ChartContainerContent>
+                    </commons:content>
+                </commons:ChartContainer>
+            </Panel>
+        </content>
+    </Page>
+</mvc:View>
