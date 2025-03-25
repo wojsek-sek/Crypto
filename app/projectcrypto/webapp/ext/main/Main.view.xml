@@ -8,8 +8,9 @@
     <Page id="Main" title="{i18n>MainTitle}">
         <content>
             <Panel id="settingsPanel" height="20%">
-                <FlexBox id="_IDGenFlexBox1" alignItems="Start">
-                    <ComboBox id="_IDGenMultiComboBox1" selectionChange="onSelectionFinishConis"
+                <FlexBox id="_IDGenFlexBox1" alignItems="Center" alignContent="Center" justifyContent="Center">
+                    <ComboBox id="_IDGenMultiComboBox1" selectionChange="onSelectionFinishConis" width="98%" 
+                        selectedKey="BTC"
                         items="{
                             path: 'uniqueCoins>/items',
                             sorter: { path: 'name', group: true }
@@ -19,16 +20,20 @@
                             <FlexItemData id="_IDGenFlexItemData" growFactor="1" />
                         </layoutData>
                     </ComboBox>
-                    <Button id="_IDGenButton1" text="Fetch new Data" width="100%" type="Default" class="sapUiSmallMarginEnd" press="onPressFetch">
-                        <layoutData>
+                    <Button id="_IDGenButton1" text="Fetch new Data" width="90%" type="Default" class="sapUiSmallMarginBegin" press="onPressFetch">
+                        <layoutData >
                             <FlexItemData id="_IDGenFlexItemData1" growFactor="1" />
                         </layoutData>
                     </Button>
-                    <Button id="_IDGenButton2" text="3" width="100%" type="Accept" >
-                        <layoutData>
+                    <ComboBox id="_IDGenMultiComboBox2" selectionChange="onSelectionFinishChart" width="98%" selectedKey="line">
+                        <items>
+                            <core:Item id="lineChartItem" key="line" text="Line Chart" />
+                            <core:Item id="waterfallChartItem" key="waterfall" text="Waterfall Chart" />
+                        </items>
+                         <layoutData>
                             <FlexItemData id="_IDGenFlexItemData2" growFactor="1" />
                         </layoutData>
-                    </Button>
+                    </ComboBox>
                 </FlexBox>
             </Panel>
             <Panel id="mainPanel" height="80%">
@@ -46,7 +51,7 @@
                             title="Line Chart">
 						    <commons:content>
                                 <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}"
-                                    height='100%' width="100%" vizType='waterfall'
+                                    height='100%' width="100%" vizType='line'
                                     vizProperties="{ title: {text : 'Bitcoin', visible : true},
                                     interaction: { syncValueAxis: false }, 
                                     timeAxis: { title: { visible: false }, interval : { unit : ''} }
@@ -66,7 +71,7 @@
                                             </viz.data:dimensions>
                                             <viz.data:measures>
                                                 <viz.data:MeasureDefinition id="_IDGenMeasureDefinition" name="price"
-                                                    value="{price}" />
+                                                    value="{= ${price}}" />
                                             </viz.data:measures>
                                         </viz.data:FlattenedDataset>
                                     </viz:dataset>

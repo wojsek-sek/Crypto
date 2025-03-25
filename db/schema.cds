@@ -9,4 +9,5 @@ entity CryptoCurrencies : cuid {
   Currency: Currency;
   timestamp: DateTime;
   change: Decimal(10,2);
+  changeValue: Decimal(10,2);
 }

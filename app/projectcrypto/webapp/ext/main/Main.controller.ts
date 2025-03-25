@@ -50,17 +50,10 @@ export default class Main extends Controller {
                 window: {
                     start: "firstDataPoint",
                     end: "lastDataPoint"
-                },
-                dataLabel: {
-                    formatString:ChartFormatter.DefaultPattern.SHORTFLOAT_MFD2,
-                    visible: false
                 }
             },
             valueAxis: {
                 visible: true,
-                label: {
-                    formatString:ChartFormatter.DefaultPattern.SHORTFLOAT
-                },
                 title: {
                     visible: false
                 }
@@ -109,6 +102,35 @@ export default class Main extends Controller {
                 text : title
             }
         });
+    }
+
+    onSelectionFinishChart(event : ComboBox$SelectionChangeEvent) : void  {
+        let selectedData = event.getParameter("selectedItem");
+        let typeChart : string | undefined = selectedData?.getKey();
+        let Chart : VizFrame = this.byId("idVizFrame");
+        let dataType : string = typeChart === "line" ? "{price}" : "{changeValue}";
+
+        Chart?.setVizType(typeChart);
+        Chart.destroyDataset();
+        
+        let dataSetObject = {
+            dimensions: [{
+                name: 'timestamp',
+                value: "{timestamp}",
+                dataType:'date'
+            }],
+            measures: [{
+                name: 'price',
+                value: dataType
+            }],
+            data: {
+                path: "/CryptoCurrencies"
+            }
+        };
+
+        let dataSet = new FlattenedDataset(dataSetObject);
+        Chart?.setDataset(dataSet);
+         
     }
 
 

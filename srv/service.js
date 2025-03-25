@@ -4,6 +4,7 @@
  */
 const LCAPApplicationService = require('@sap/low-code-event-handler');
 const before_Cryptocurrencies_Create_Update = require('./code/before-cryptocurrencies-create-update');
+const before_Cryptocurrencies_Read = require('./code/before-cryptocurrencies-read');
 const after_Cryptocurrencies_Read = require('./code/after-cryptocurrencies-read');
 const api_CoinCall = require('./code/api_CoinCall')
 
@@ -16,6 +17,10 @@ class cryptoCurrencyNamespaceSrv extends LCAPApplicationService {
 
         this.after('READ', 'CryptoCurrencies', async (results, request) => {
             await after_Cryptocurrencies_Read(results, request);
+        });
+
+        this.before('READ', 'CryptoCurrencies', async (results, request) => {
+            await before_Cryptocurrencies_Read(results, request);
         });
 
         this.on('triggerCryptoCurrency', async (request) => {
