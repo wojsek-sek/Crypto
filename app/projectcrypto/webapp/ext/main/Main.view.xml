@@ -57,7 +57,7 @@
                                     timeAxis: { title: { visible: false }, interval : { unit : ''} }
                                     }">
                                     <viz:dataset>
-                                        <viz.data:FlattenedDataset id="_IDGenFlattenedDataset1" data="{path: '/CryptoCurrencies', 
+                                        <viz.data:FlattenedDataset id="_IDGenFlattenedDataset1" data="{path: '/SortedCrypto', 
                                         filters: [
                                             {
                                             path: 'symbol',

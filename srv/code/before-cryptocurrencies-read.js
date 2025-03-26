@@ -6,7 +6,7 @@
 */
 module.exports = async function(results, request) {
     const { CryptoCurrencies } = cds.entities;
-    console.log(await SELECT.from(CryptoCurrencies).orderBy("timestamp"))
-    return await SELECT.from(CryptoCurrencies).orderBy("timestamp");
+    const res = await SELECT.from(CryptoCurrencies).orderBy({ timestamp: 'asc' })
+    return {value : res };
     
 };

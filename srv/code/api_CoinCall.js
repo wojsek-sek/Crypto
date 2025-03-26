@@ -26,7 +26,7 @@ module.exports = async function(results, request) {
             const { name, symbol, price_usd: price, percent_change_1h : change} = data;
             let timestamp = new Date().toISOString();
             let ID = cds.utils.uuid();
-            let changePrice = parseFloat(price) + parseFloat((price * (change * 0.01)));
+            let changePrice = parseFloat((price * (change * 0.01)));
             changePrice = changePrice.toFixed(2);
             await INSERT.into(CryptoCurrencies).columns(['ID', 'name', 'symbol', 'price', 'timestamp', 'change', 'changeValue']).values(ID, name, symbol, price, timestamp, change, changePrice);
         }

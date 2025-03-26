@@ -47,6 +47,7 @@ export default class Main extends Controller {
 
         Chart?.setVizProperties({ 
             plotArea: {
+                drawingEffect: "line",
                 window: {
                     start: "firstDataPoint",
                     end: "lastDataPoint"
@@ -92,11 +93,10 @@ export default class Main extends Controller {
         let title : string | undefined = selectedData?.getText();
         
         let filters : Filter[] = [new Filter({ path: "symbol", operator: FilterOperator.EQ, value1: text })]; 
-        let ChartData : FlattenedDataset | any = this.byId("_IDGenFlattenedDataset1");
-        let Chart : VizFrame | any = this.byId("idVizFrame");
+        let Chart : VizFrame = this.byId("idVizFrame");
+        let ChartData : FlattenedDataset = Chart.getDataset();
 
         ChartData?.getBinding("data").filter(filters);
-
         Chart?.setVizProperties({ 
             title : { 
                 text : title
@@ -124,7 +124,7 @@ export default class Main extends Controller {
                 value: dataType
             }],
             data: {
-                path: "/CryptoCurrencies"
+                path: "/SortedCrypto"
             }
         };
 

@@ -19,9 +19,9 @@ class cryptoCurrencyNamespaceSrv extends LCAPApplicationService {
             await after_Cryptocurrencies_Read(results, request);
         });
 
-        this.before('READ', 'CryptoCurrencies', async (results, request) => {
-            await before_Cryptocurrencies_Read(results, request);
-        });
+        //this.on('READ', 'CryptoCurrencies', async (results, request) => {
+        //    await before_Cryptocurrencies_Read(results, request);
+        //});
 
         this.on('triggerCryptoCurrency', async (request) => {
             await api_CoinCall(request);
