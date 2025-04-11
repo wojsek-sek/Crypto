@@ -7,6 +7,7 @@
   "private": true,
   "dependencies": {
     "@cap-js/hana": "^1",
+    "@cap-js/postgres": "^1.13.0",
     "@sap-cloud-sdk/http-client": "^4.0.1",
     "@sap-cloud-sdk/util": "^4.0.1",
     "@sap/cds": "^8",
@@ -39,28 +40,32 @@
     "watch-cryptoapp": "cds watch --open ts.cryptoapp/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-projectcrypto": "cds watch --open ts.projectcrypto/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
-  "cds": {
-    "sql": {
-      "native_hana_associations": false
-    },
-    "requires": {
-      "[production]": {
-        "db": "hana",
-        "auth": "xsuaa"
+    "cds": {
+      "sql": {
+        "native_hana_associations": false
       },
-      "app-service": {
-        "impl": "@sap/low-code-event-handler"
-      },
-      "auth": {
-        "[development]": {
-          "kind": "dummy"
+      "requires": {
+        "db": {
+          "kind": "sqlite"
         },
         "[production]": {
-          "kind": "xsuaa"
+          "db": {
+            "kind": "hana"
+          }
+        },
+        "app-service": {
+          "impl": "@sap/low-code-event-handler"
+        },
+        "auth": {
+          "[development]": {
+            "kind": "dummy"
+          },
+          "[production]": {
+            "kind": "xsuaa"
+          }
         }
       }
-    }
-  },
+    },
   "lcap": true,
   "sapux": [
     "app/cryptocurrency-analytics",

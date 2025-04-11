@@ -1,0 +1,9 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:f="sap.f" xmlns:core="sap.ui.core">
+	<ResponsivePopover id="_IDGenResponsivePopover" placement="Bottom" showHeader="false">
+		<f:ProductSwitch id="_IDGenProductSwitch1" change="onSwitchMenuChange">
+			<f:items>
+				<f:ProductSwitchItem id="_IDGenProductSwitchItem" src="sap-icon://clinical-task-tracker" title="Chart Builder" subTitle="Wizard" targetSrc="CryptoCurrenciesWizardPage"/>
+			</f:items>
+		</f:ProductSwitch>
+	</ResponsivePopover>
+</core:FragmentDefinition>

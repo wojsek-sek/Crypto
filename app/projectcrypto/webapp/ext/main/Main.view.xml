@@ -1,91 +1,70 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros"
-    xmlns:html="http://www.w3.org/1999/xhtml" 
-    xmlns:viz="sap.viz.ui5.controls" xmlns:layout="sap.ui.layout"
-    xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds"
-    xmlns:viz.data="sap.viz.ui5.data"
-    xmlns:commons="sap.suite.ui.commons"
-    controllerName="ts.projectcrypto.ext.main.Main">
-    <Page id="Main" title="{i18n>MainTitle}">
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:viz="sap.viz.ui5.controls" xmlns:layout="sap.ui.layout" xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds" xmlns:viz.data="sap.viz.ui5.data" xmlns:commons="sap.suite.ui.commons" controllerName="ts.projectcrypto.ext.main.Main">
+    <Page id="Main" title="{i18n&gt;MainTitle}">
+        <headerContent>
+			<Button
+				id="pSwitchBtn"
+				icon="sap-icon://menu"
+				text="Open Product Switch"
+				press="onSwitchMenuOpen" />
+		</headerContent>
         <content>
             <Panel id="settingsPanel" height="20%">
                 <FlexBox id="_IDGenFlexBox1" alignItems="Center" alignContent="Center" justifyContent="Center">
-                    <ComboBox id="_IDGenMultiComboBox1" selectionChange="onSelectionFinishConis" width="98%" 
-                        selectedKey="BTC"
-                        items="{
-                            path: 'uniqueCoins>/items',
-                            sorter: { path: 'name', group: true }
-                        }">
-                        <core:Item id="_IDGenItem" key="{uniqueCoins>symbol}" text="{uniqueCoins>name}" />
-                         <layoutData>
-                            <FlexItemData id="_IDGenFlexItemData" growFactor="1" />
+                    <ComboBox id="_IDGenMultiComboBox1" selectionChange="onSelectionFinishConis" width="98%" selectedKey="BTC" items="{                             path: 'uniqueCoins&gt;/items',                             sorter: { path: 'name', group: true }                         }">
+                        <core:Item id="_IDGenItem" key="{uniqueCoins&gt;symbol}" text="{uniqueCoins&gt;name}"/>
+                        <layoutData>
+                            <FlexItemData id="_IDGenFlexItemData" growFactor="1"/>
                         </layoutData>
                     </ComboBox>
                     <Button id="_IDGenButton1" text="Fetch new Data" width="90%" type="Default" class="sapUiSmallMarginBegin" press="onPressFetch">
-                        <layoutData >
-                            <FlexItemData id="_IDGenFlexItemData1" growFactor="1" />
+                        <layoutData>
+                            <FlexItemData id="_IDGenFlexItemData1" growFactor="1"/>
                         </layoutData>
                     </Button>
+                    <Button id="_IDGenButton2" text="Pick Data Time" width="90%" type="Default" class="sapUiSmallMarginEnd" press="onOpenDateRangeSelection" ariaHasPopup="Dialog">
+                        <layoutData>
+                            <FlexItemData id="_IDGenFlexItemData5" growFactor="1"/>
+                        </layoutData>
+                    </Button>
+                    <DateRangeSelection
+                        id="HiddenDRS"
+                        hideInput="true"
+                        change="onChangeDateHandler" />
                     <ComboBox id="_IDGenMultiComboBox2" selectionChange="onSelectionFinishChart" width="98%" selectedKey="line">
                         <items>
-                            <core:Item id="lineChartItem" key="line" text="Line Chart" />
-                            <core:Item id="waterfallChartItem" key="waterfall" text="Waterfall Chart" />
+                            <core:Item id="lineChartItem" key="line" text="Line Chart"/>
+                            <core:Item id="waterfallChartItem" key="waterfall" text="Waterfall Chart"/>
                         </items>
-                         <layoutData>
-                            <FlexItemData id="_IDGenFlexItemData2" growFactor="1" />
+                        <layoutData>
+                            <FlexItemData id="_IDGenFlexItemData2" growFactor="1"/>
                         </layoutData>
                     </ComboBox>
                 </FlexBox>
             </Panel>
             <Panel id="mainPanel" height="80%">
-                <commons:ChartContainer
-                    id="chartContainer"
-                    showFullScreen="true"
-                    showPersonalization="false"
-                    autoAdjustHeight="true"
-                    personalizationPress="attachPersonalizationPress"
-                    contentChange="attachContentChange"
-                    title="Coin">
+                <commons:ChartContainer id="chartContainer" showFullScreen="true"  autoAdjustHeight="true" showZoom="true" personalizationPress="attachPersonalizationPress" contentChange="attachContentChange" title="Coin">
                     <commons:content>
-                        <commons:ChartContainerContent id="_IDGenChartContainerContent"
-                            icon="sap-icon://line-chart"
-                            title="Line Chart">
-						    <commons:content>
-                                <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}"
-                                    height='100%' width="100%" vizType='line'
-                                    vizProperties="{ title: {text : 'Bitcoin', visible : true},
-                                    interaction: { syncValueAxis: false }, 
-                                    timeAxis: { title: { visible: false }, interval : { unit : ''} }
-                                    }">
+                        <commons:ChartContainerContent id="_IDGenChartContainerContent">
+                            <commons:content>
+                                <viz:VizFrame id="idVizFrame" uiConfig="{applicationSet:'fiori'}" height="100%" width="100%" vizType="line" vizProperties="{ title: {text : 'Bitcoin', visible : true},                                     interaction: { syncValueAxis: false },                                      timeAxis: { title: { visible: false }, interval : { unit : ''} }                                     }">
                                     <viz:dataset>
-                                        <viz.data:FlattenedDataset id="_IDGenFlattenedDataset1" data="{path: '/SortedCrypto', 
-                                        filters: [
-                                            {
-                                            path: 'symbol',
-                                            operator: 'EQ',
-                                            value1: 'BTC'
-                                            }
-                                        ]}">
+                                        <viz.data:FlattenedDataset id="_IDGenFlattenedDataset1" data="{path: '/SortedCrypto'}">
                                             <viz.data:dimensions>
-                                                <viz.data:DimensionDefinition id="_IDGenDimensionDefinition" name="timestamp"
-                                                    value="{timestamp}" dataType="date"/>
+                                                <viz.data:DimensionDefinition id="_IDGenDimensionDefinition" name="timestamp" value="{path: 'timestamp', formatter: '.formatter.formatDate'}" dataType="date"/>
                                             </viz.data:dimensions>
                                             <viz.data:measures>
-                                                <viz.data:MeasureDefinition id="_IDGenMeasureDefinition" name="price"
-                                                    value="{= ${price}}" />
+                                                <viz.data:MeasureDefinition id="_IDGenMeasureDefinition" name="price" value="{price}"/>
                                             </viz.data:measures>
                                         </viz.data:FlattenedDataset>
                                     </viz:dataset>
-
                                     <viz:feeds>
-                                        <viz.feeds:FeedItem id='valueAxisFeed' uid="valueAxis" type="Measure"
-                                            values="price" />
-                                        <viz.feeds:FeedItem id='categoryAxisFeed' uid="categoryAxis" type="Dimension"
-                                            values="timestamp" />
+                                        <viz.feeds:FeedItem id="valueAxisFeed" uid="valueAxis" type="Measure" values="price"/>
+                                        <viz.feeds:FeedItem id="categoryAxisFeed" uid="categoryAxis" type="Dimension" values="timestamp"/>
                                     </viz:feeds>
                                     <viz:dependents>
-                                        <viz:Popover id="idPopOver"></viz:Popover>
+                                        <viz:Popover id="idPopOver"/>
                                     </viz:dependents>
-                                </viz:VizFrame> 
+                                </viz:VizFrame>
                             </commons:content>
                         </commons:ChartContainerContent>
                     </commons:content>

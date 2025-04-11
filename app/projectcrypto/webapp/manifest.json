@@ -62,7 +62,8 @@
       "libs": {
         "sap.m": {},
         "sap.ui.core": {},
-        "sap.fe.core": {}
+        "sap.fe.core": {},
+        "sap.fe.macros": {}
       }
     },
     "contentDensities": {
@@ -100,6 +101,11 @@
           "name": "CryptoCurrenciesMain",
           "pattern": ":?query:",
           "target": "CryptoCurrenciesMain"
+        },
+        {
+          "name": "CryptoCurrenciesWizardPage",
+          "pattern": "ChartBuilder:?query:",
+          "target": "CryptoCurrenciesWizardPage"
         }
       ],
       "targets": {
@@ -109,9 +115,27 @@
           "name": "sap.fe.core.fpm",
           "options": {
             "settings": {
-              "navigation": {},
+              "navigation": {
+                "CryptoCurrencies": {
+                  "detail": {
+                    "route": "CryptoCurrenciesWizardPage"
+                  }
+                }
+              },
               "contextPath": "/CryptoCurrencies",
               "viewName": "ts.projectcrypto.ext.main.Main"
+            }
+          }
+        },
+        "CryptoCurrenciesWizardPage": {
+          "type": "Component",
+          "id": "CryptoCurrenciesWizardPage",
+          "name": "sap.fe.core.fpm",
+          "options": {
+            "settings": {
+              "navigation": {},
+              "contextPath": "/CryptoCurrencies",
+              "viewName": "ts.projectcrypto.ext.view.Wizard"
             }
           }
         }

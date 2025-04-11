@@ -1,13 +1,20 @@
 import Controller from "sap/fe/core/PageController";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Formatter from "./formatters/formatter";
-import Event from "sap/ui/base/Event";
 import { ComboBox$SelectionChangeEvent } from "sap/m/ComboBox";
 import Filter from "sap/ui/model/Filter";
 import FilterOperator from "sap/ui/model/FilterOperator";
 import FlattenedDataset from "sap/viz/ui5/data/FlattenedDataset";
 import VizFrame from "sap/viz/ui5/controls/VizFrame";
-import ChartFormatter from "sap/viz/ui5/format/ChartFormatter";
+import Fragment from "sap/ui/core/Fragment";
+import Device from "sap/ui/Device";
+import Button, { Button$PressEvent } from "sap/m/Button";
+import Routing from "sap/fe/core/controllerextensions/Routing";
+import Context from "sap/ui/model/Context";
+import Event from "sap/ui/base/Event";
+import { DatePicker$ChangeEvent } from "sap/m/DatePicker";
+
+
 
 
 type symbolType = { 
@@ -21,6 +28,11 @@ type symbolType = {
 export default class Main extends Controller {
 
     public formatter = Formatter;
+    private Popover : any;
+    private coinFilter : Filter = new Filter({ path: "symbol", operator: FilterOperator.EQ, value1: "BTC" });
+    private filtersWithDate : Filter;
+    private dateStart : string; 
+    private dateEnd : string;
 
     /**
      * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -42,15 +54,53 @@ export default class Main extends Controller {
             oModelData.setProperty("/items", uniqueSymbolsData);
          });
 
+
+        this.dateStart = new Date().toISOString().replace(/T.*Z$/, "T00:00:00.000Z");
+        this.dateEnd = new Date().toISOString().replace(/T.*Z$/, "T23:59:59.999Z");  
         
         let Chart : VizFrame | any = this.byId("idVizFrame");
 
         Chart?.setVizProperties({ 
             plotArea: {
+                marker : { visible : false, 
+                    size : "4"
+                 },
                 drawingEffect: "line",
                 window: {
                     start: "firstDataPoint",
                     end: "lastDataPoint"
+                },
+                dataPointStyle: {
+                    "rules":
+                    [
+                        {
+                            "dataContext" : { measureNames : "changeValue"},
+                            "properties": {
+                                "color":"sapUiChartPaletteSemanticBad",
+                            },
+                            "displayName":"Down", 
+                            "callback" : (data : any)=> { 
+                                return data.price < 0;
+                            }
+                        },
+                        {
+                            "dataContext" : { measureNames : "changeValue"},
+                            "properties": {
+                                "color":"sapUiChartPaletteSemanticGood",
+                            },
+                            "displayName":"Up", 
+                            "callback" : (data : any)=> {
+                                return data.price > 0;
+                            }
+                        }
+                    ],
+                    "others":
+                    {
+                        "properties": {
+                             "color": "#072A6C",
+                             "displayName":"Line",
+                        }
+                    }
                 }
             },
             valueAxis: {
@@ -74,6 +124,23 @@ export default class Main extends Controller {
 
     }
 
+    onAfterRendering(): void | undefined {
+        this.filtersWithDate = new Filter({
+            filters : [
+                this.coinFilter,
+                new Filter({ path: "timestamp", operator: FilterOperator.GE, value1: this.dateStart }),
+                new Filter({ path: "timestamp", operator: FilterOperator.LE, value1: this.dateEnd }),
+                ],
+            and : true
+        })
+        
+        let Chart : VizFrame | any = this.byId("idVizFrame");
+        let ChartData : FlattenedDataset | any = Chart.getDataset();
+        let chartBinding = ChartData?.getBinding("data");
+        chartBinding.filter(this.filtersWithDate);
+
+    }
+
     getUniqueSymbols(data : Array<symbolType>): Array<symbolType> { 
         const uniqueSymbols = [... new Map(data.map(item => [item.symbol, item])).values()];
         return uniqueSymbols;
@@ -92,11 +159,20 @@ export default class Main extends Controller {
         let text : string | undefined = selectedData?.getKey();
         let title : string | undefined = selectedData?.getText();
         
-        let filters : Filter[] = [new Filter({ path: "symbol", operator: FilterOperator.EQ, value1: text })]; 
-        let Chart : VizFrame = this.byId("idVizFrame");
-        let ChartData : FlattenedDataset = Chart.getDataset();
+        this.coinFilter = new Filter({ path: "symbol", operator: FilterOperator.EQ, value1: text }); 
+        let Chart : VizFrame | any= this.byId("idVizFrame");
+        let ChartData : FlattenedDataset | any = Chart.getDataset();
 
-        ChartData?.getBinding("data").filter(filters);
+        this.filtersWithDate = new Filter({
+            filters : [
+                this.coinFilter,
+                new Filter({ path: "timestamp", operator: FilterOperator.GE, value1: this.dateStart }),
+                new Filter({ path: "timestamp", operator: FilterOperator.LE, value1: this.dateEnd }),
+                ],
+            and : true
+        })
+
+        ChartData?.getBinding("data").filter(this.filtersWithDate);
         Chart?.setVizProperties({ 
             title : { 
                 text : title
@@ -107,13 +183,12 @@ export default class Main extends Controller {
     onSelectionFinishChart(event : ComboBox$SelectionChangeEvent) : void  {
         let selectedData = event.getParameter("selectedItem");
         let typeChart : string | undefined = selectedData?.getKey();
-        let Chart : VizFrame = this.byId("idVizFrame");
+        let Chart : VizFrame | any = this.byId("idVizFrame");
         let dataType : string = typeChart === "line" ? "{price}" : "{changeValue}";
 
         Chart?.setVizType(typeChart);
-        Chart.destroyDataset();
         
-        let dataSetObject = {
+        let dataSetObject : any = {
             dimensions: [{
                 name: 'timestamp',
                 value: "{timestamp}",
@@ -127,10 +202,68 @@ export default class Main extends Controller {
                 path: "/SortedCrypto"
             }
         };
-
-        let dataSet = new FlattenedDataset(dataSetObject);
+        let dataSet : FlattenedDataset | any = new FlattenedDataset(dataSetObject);
         Chart?.setDataset(dataSet);
-         
+        
+        Chart?.getDataset().getBinding("data").filter(this.filtersWithDate);
+    }
+
+    onSwitchMenuOpen(event : Button$PressEvent) { 
+        let view = this.getView();
+        let that = this; 
+        if (!this.Popover) {
+            this.Popover = Fragment.load({
+                id: view?.getId(),
+                name: "ts.projectcrypto.ext.fragments.switchmenu",
+                controller: this
+            }).then(function(oPopover : any){
+                view?.addDependent(oPopover);
+                if (Device.system.phone) {
+                    oPopover.setEndButton(new Button({text: "Close", type: "Emphasized", press: that.onSwitchMenuClose.bind(that)}));
+                }
+                return oPopover;
+            }.bind(this));
+        }
+
+        this.Popover.then(function(oPopover : any){
+            oPopover.openBy(event.getSource());
+        });
+    }
+
+    onSwitchMenuClose () {
+        this.Popover.then(function(oPopover : any){
+            oPopover.close();
+        });
+    }
+
+    onSwitchMenuChange () { 
+        const router : Routing = this.getExtensionAPI().getRouting();
+        router.navigateToRoute("CryptoCurrenciesWizardPage");
+    }
+
+    onOpenDateRangeSelection (event : Button$PressEvent) { 
+        this.getView()?.byId("HiddenDRS")?.openBy(event.getSource().getDomRef());
+
+    }
+
+    onChangeDateHandler (event : DatePicker$ChangeEvent) { 
+        let dates : string | undefined = event.getParameter("value");
+        let datesArray : string[] | undefined = dates?.split("-");
+        this.dateStart = new Date(datesArray?.at(0) as string).toISOString(); 
+        this.dateEnd = new Date(datesArray?.at(1) as string).toISOString();
+
+        this.filtersWithDate = new Filter({
+            filters : [
+                this.coinFilter,
+                new Filter({ path: "timestamp", operator: FilterOperator.GE, value1: this.dateStart }),
+                new Filter({ path: "timestamp", operator: FilterOperator.LE, value1: this.dateEnd }),
+                ],
+            and : true
+        })
+        let Chart : VizFrame | any= this.byId("idVizFrame");
+        let ChartData : FlattenedDataset | any = Chart.getDataset();
+
+        ChartData?.getBinding("data").filter(this.filtersWithDate);
     }
 
 

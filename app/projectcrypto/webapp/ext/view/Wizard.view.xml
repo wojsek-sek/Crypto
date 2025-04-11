@@ -1,0 +1,31 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:macros="sap.fe.macros"
+    xmlns:html="http://www.w3.org/1999/xhtml" controllerName="ts.projectcrypto.ext.view.Wizard">
+    <Page id="Wizard" title="{i18n>WizardTitle}">
+        <content>
+            	<Wizard id="ShoppingCartWizard"
+					        class="sapUiResponsivePadding--header sapUiResponsivePadding--content"
+					        complete="completedHandler"
+					        height="auto"
+					        enableBranching="true">
+						<WizardStep
+							id="ChartTypeStep"
+							nextStep="DimensionStep"
+							title="Chart Type"
+							icon="sap-icon://area-chart">
+						</WizardStep>
+						<WizardStep
+							id="DimensionStep"
+							title="Dimension in Chart"
+							nextStep="MeasureStep"
+							icon="sap-icon://business-objects-experience">
+							
+						</WizardStep>
+						<WizardStep
+							id="MeasureStep"
+							title="Measure in Chart"
+							icon="sap-icon://business-objects-experience">
+						</WizardStep>
+					</Wizard>
+        </content>
+    </Page>
+</mvc:View>
