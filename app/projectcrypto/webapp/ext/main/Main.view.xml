@@ -29,7 +29,8 @@
                     <DateRangeSelection
                         id="HiddenDRS"
                         hideInput="true"
-                        change="onChangeDateHandler" />
+                        change="onChangeDateHandler"  
+                        displayFormat="short"/>
                     <ComboBox id="_IDGenMultiComboBox2" selectionChange="onSelectionFinishChart" width="98%" selectedKey="line">
                         <items>
                             <core:Item id="lineChartItem" key="line" text="Line Chart"/>
@@ -61,9 +62,7 @@
                                         <viz.feeds:FeedItem id="valueAxisFeed" uid="valueAxis" type="Measure" values="price"/>
                                         <viz.feeds:FeedItem id="categoryAxisFeed" uid="categoryAxis" type="Dimension" values="timestamp"/>
                                     </viz:feeds>
-                                    <viz:dependents>
-                                        <viz:Popover id="idPopOver"/>
-                                    </viz:dependents>
+                                 
                                 </viz:VizFrame>
                             </commons:content>
                         </commons:ChartContainerContent>

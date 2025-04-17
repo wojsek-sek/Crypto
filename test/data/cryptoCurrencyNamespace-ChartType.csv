@@ -1,0 +1,16 @@
+ID;name;code;icon
+11141401-d37a-4acc-b52e-f5e0ce307178;Line;line;sap-icon://line-chart
+565a8ba3-bc4c-4247-86d9-46e5daf061f8;Column;column;sap-icon://column-chart-dual-axis
+d297c4be-c5fa-44ed-9f1e-9d81286baec0;Bar;bar;sap-icon://bar-chart
+1d534232-7569-49ea-87c9-162b8007479c;Stacked Bar;stacked_bar;sap-icon://bar-chart
+2b75c07c-2a25-4d23-b03e-8998cc0e9383;Stacked Column;stacked_column;sap-icon://column-chart-dual-axis
+191cb487-cb56-4996-b08c-46ce8be9f857;Combination;combination;sap-icon://horizontal-combination-chart
+5d5980a2-3e00-441b-97b2-737367789750;Bullet;bullet;sap-icon://horizontal-bullet-chart
+b3637077-cc1b-4b3b-a93e-5e616b803247;Bubble;bubble;sap-icon://bubble-chart
+00367eaf-c929-4fab-89a9-abd030913dae;Pie;pie;sap-icon://pie-chart
+e070d1aa-66c0-4018-9cc8-4b50116202f3;Donut;donut;sap-icon://donut-chart
+ef41c746-072c-4904-ac85-972ac713c91c;Heatmap;heatmap;sap-icon://heatmap-chart
+dd56b2e5-0dd4-4cb4-a825-5227209bc906;Treemap;treemap;sap-icon://Chart-Tree-Map
+cab07a9b-7804-4722-8563-b1f1d1ff7a46;Waterfall;waterfall;sap-icon://vertical-waterfall-chart
+e662e10d-aed4-4ff2-a19e-2fbd4ce78b4a;Area;area;sap-icon://area-chart
+bbe24969-43a0-44f3-a1d5-28c69c81d877;Radar;radar;sap-icon://radar-chart

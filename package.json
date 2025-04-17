@@ -40,32 +40,34 @@
     "watch-cryptoapp": "cds watch --open ts.cryptoapp/index.html?sap-ui-xx-viewCache=false --livereload false",
     "watch-projectcrypto": "cds watch --open ts.projectcrypto/index.html?sap-ui-xx-viewCache=false --livereload false"
   },
-    "cds": {
-      "sql": {
-        "native_hana_associations": false
+  "cds": {
+    "sql": {
+      "native_hana_associations": false
+    },
+    "requires": {
+      "db": {
+        "kind": "sqlite"
       },
-      "requires": {
+      "[production]": {
         "db": {
-          "kind": "sqlite"
+          "impl": "@cap-js/postgres",
+          "dialect": "postgres",
+          "kind": "postgres"
+        }
+      },
+      "app-service": {
+        "impl": "@sap/low-code-event-handler"
+      },
+      "auth": {
+        "[development]": {
+          "kind": "dummy"
         },
         "[production]": {
-          "db": {
-            "kind": "hana"
-          }
-        },
-        "app-service": {
-          "impl": "@sap/low-code-event-handler"
-        },
-        "auth": {
-          "[development]": {
-            "kind": "dummy"
-          },
-          "[production]": {
-            "kind": "xsuaa"
-          }
+          "kind": "xsuaa"
         }
       }
-    },
+    }
+  },
   "lcap": true,
   "sapux": [
     "app/cryptocurrency-analytics",

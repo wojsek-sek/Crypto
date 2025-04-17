@@ -63,7 +63,8 @@
         "sap.m": {},
         "sap.ui.core": {},
         "sap.fe.core": {},
-        "sap.fe.macros": {}
+        "sap.fe.macros": {},
+        "sap.fe.templates": {}
       }
     },
     "contentDensities": {
@@ -134,8 +135,7 @@
           "options": {
             "settings": {
               "navigation": {},
-              "contextPath": "/CryptoCurrencies",
-              "viewName": "ts.projectcrypto.ext.view.Wizard"
+              "viewName": "ts.projectcrypto.ext.view.Wizard" 
             }
           }
         }

@@ -13,6 +13,7 @@ import Routing from "sap/fe/core/controllerextensions/Routing";
 import Context from "sap/ui/model/Context";
 import Event from "sap/ui/base/Event";
 import { DatePicker$ChangeEvent } from "sap/m/DatePicker";
+import DateRangeSelection from "sap/m/DateRangeSelection";
 
 
 
@@ -58,7 +59,7 @@ export default class Main extends Controller {
         this.dateStart = new Date().toISOString().replace(/T.*Z$/, "T00:00:00.000Z");
         this.dateEnd = new Date().toISOString().replace(/T.*Z$/, "T23:59:59.999Z");  
         
-        let Chart : VizFrame | any = this.byId("idVizFrame");
+        let Chart : VizFrame  = this.byId("idVizFrame") as VizFrame;
 
         Chart?.setVizProperties({ 
             plotArea: {
@@ -239,19 +240,21 @@ export default class Main extends Controller {
     onSwitchMenuChange () { 
         const router : Routing = this.getExtensionAPI().getRouting();
         router.navigateToRoute("CryptoCurrenciesWizardPage");
+        //this?.getAppComponent()?.getRouter()?.navTo("CryptoCurrenciesWizardPage")
     }
 
     onOpenDateRangeSelection (event : Button$PressEvent) { 
-        this.getView()?.byId("HiddenDRS")?.openBy(event.getSource().getDomRef());
+        (this.getView()?.byId("HiddenDRS") as DateRangeSelection)?.openBy(event.getSource().getDomRef() as HTMLElement);
 
     }
 
     onChangeDateHandler (event : DatePicker$ChangeEvent) { 
         let dates : string | undefined = event.getParameter("value");
         let datesArray : string[] | undefined = dates?.split("-");
-        this.dateStart = new Date(datesArray?.at(0) as string).toISOString(); 
-        this.dateEnd = new Date(datesArray?.at(1) as string).toISOString();
-
+        let dateString1 : string= datesArray?.at(0)?.trim() as string;
+        let dateString2 : string = datesArray?.at(1)?.trim() as string;
+        this.dateStart = new Date(dateString1).toISOString(); 
+        this.dateEnd = new Date(dateString2).toISOString();
         this.filtersWithDate = new Filter({
             filters : [
                 this.coinFilter,
@@ -265,6 +268,7 @@ export default class Main extends Controller {
 
         ChartData?.getBinding("data").filter(this.filtersWithDate);
     }
+
 
 
 }
