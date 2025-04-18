@@ -21,6 +21,7 @@ entity ChartType : cuid {
 entity UserChart : cuid {
   name : String(40) @mandatory;
   type : String(20) @mandatory; 
-  color : String(100); 
-  measures : array of String;
+  measures : array of String @mandatory;
+  dimension : String(30) @mandatory;
+  coin : String(30) @mandatory;
 }

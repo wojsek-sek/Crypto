@@ -7,6 +7,8 @@ service cryptoCurrencyNamespaceSrv {
   entity CryptoCurrencies as projection on cryptoCurrencyNamespace.CryptoCurrencies;
 
   entity ChartType as projection on cryptoCurrencyNamespace.ChartType;
+
+  entity UserChart as projection on cryptoCurrencyNamespace.UserChart;
   
   @readonly
   entity SortedCrypto as select from CryptoCurrencies

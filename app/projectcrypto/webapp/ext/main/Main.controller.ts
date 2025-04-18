@@ -269,6 +269,11 @@ export default class Main extends Controller {
         ChartData?.getBinding("data").filter(this.filtersWithDate);
     }
 
+    onSelectionUserChange (event : ComboBox$SelectionChangeEvent) { 
+        const context = event.getParameter("selectedItem")?.getBindingContext()?.getObject(); 
+        debugger;
+    }   
+
 
 
 }

@@ -15,6 +15,17 @@ import Formatter from "../main/formatters/formatter";
 import ComboBox from "sap/m/ComboBox";
 import MultiComboBox from "sap/m/MultiComboBox";
 import FeedItem from "sap/viz/ui5/controls/common/feeds/FeedItem";
+import Input, { Input$LiveChangeEvent } from "sap/m/Input";
+import WizardStep from "sap/m/WizardStep";
+import { MultiComboBox$ChangeEvent } from "sap/ui/webc/main/MultiComboBox";
+import Model from "sap/ui/model/Model";
+import ODataModel from "sap/ui/model/odata/v4/ODataModel";
+import Context from "sap/ui/model/odata/v4/Context";
+import MessageToast from "sap/m/MessageToast";
+import ChartContainerContent from "sap/suite/ui/commons/ChartContainerContent";
+import ChartContainer from "sap/suite/ui/commons/ChartContainer";
+import ListBase, { ListBase$SelectionChangeEvent } from "sap/m/ListBase";
+import Helper from "../utils/Helper";
 
 
 /**
@@ -57,139 +68,79 @@ export default class Wizard extends Controller {
 
      onCompletedWizard() : void { 
         (this?.getModel("wizModel") as JSONModel)?.setProperty("/visiblePage", false);
+        const inputName : string = (this?.byId("_IDGenInput") as Input).getValue();
+        const selectList : string = (this?.byId("_IDGenSelectList1") as SelectList)?.getSelectedKey();
+        const selectButton : string = (this.byId("_IDGenSegmentedButton1") as SegmentedButton)?.getSelectedKey(); 
+        const selectGridList : any = (this.byId("gridList") as GridList)?.getSelectedItem(); 
+        const selectedMeasuresEntity : string[] = (this?.byId("_IDGenMultiComboBox") as MultiComboBox)?.getSelectedKeys();
 
-         const selectList : string = (this?.byId("_IDGenSelectList1") as SelectList)?.getSelectedKey();
-         const selectButton : string = (this.byId("_IDGenSegmentedButton1") as SegmentedButton)?.getSelectedKey(); 
-         const selectGridList : any[] = (this.byId("gridList") as GridList)?.getSelectedItems(); 
-         const selectedMeasures : Filter[] = []; 
-         const selectedMeasuresEntity : string[] = (this?.byId("_IDGenMultiComboBox") as MultiComboBox)?.getSelectedKeys();
-         const measuresArray : any[] = [];
-
-         const vizChartReview : VizFrame = this.byId("idVizFrameReviewWizard") as VizFrame;
-         
-         selectGridList.forEach((element)=> { 
-            let symbol : string = element.getContent().at(0).getAggregation("items").at(2).getProperty("text");
-            selectedMeasures.push(new Filter({ path: "symbol", operator: FilterOperator.EQ, value1: symbol }));
-         });
-
-         // add dimension feed 
-         let feedValueDim : FeedItem = new FeedItem({
-            'uid': `${selectButton}Axis`,
-            'type': "Dimension",
-            'values': ["timestamp"]
-        }); 
-
-        vizChartReview.addFeed(feedValueDim);
-
-         selectedMeasuresEntity.forEach((element) => { 
-            measuresArray.push({
-                        name: element,
-                        value: `{${element}}`
-            });
-
-            //add feeds  
-            let feedValueMeasure : FeedItem = new FeedItem({
-               'uid': `${element}Axis` as string,
-               'type': "Measure" as string,
-               'values': [element]
-           });
-
-           vizChartReview.addFeed(feedValueMeasure);
-         });
-
-         vizChartReview.setVizType(selectList);
-
-         let dataSetObject : any = {
-                  dimensions: [{
-                        name: 'timestamp',
-                        value: `{${selectButton}}`,
-                        dataType:'date'
-                  }],
-                  measures: measuresArray,
-                  data: {
-                        path: "/SortedCrypto"
-                  }
-               };
-         let dataSet : FlattenedDataset = new FlattenedDataset(dataSetObject);
-         
-         let reviewFilter : Filter = new Filter({
-            filters : selectedMeasures,
-            and : true
-         });
-
-         vizChartReview?.setDataset(dataSet);
-
-         (vizChartReview.getDataset().getBinding("data") as any)?.filter(reviewFilter);
-
-         vizChartReview?.setVizProperties({ 
-            plotArea: {
-                marker : { visible : false, 
-                    size : "4"
-                 },
-                drawingEffect: "line",
-                window: {
-                    start: "firstDataPoint",
-                    end: "lastDataPoint"
-                },
-                dataPointStyle: {
-                    "rules":
-                    [
-                        {
-                            "dataContext" : { measureNames : "changeValue"},
-                            "properties": {
-                                "color":"sapUiChartPaletteSemanticBad",
-                            },
-                            "displayName":"Down", 
-                            "callback" : (data : any)=> { 
-                                return data.price < 0;
-                            }
-                        },
-                        {
-                            "dataContext" : { measureNames : "changeValue"},
-                            "properties": {
-                                "color":"sapUiChartPaletteSemanticGood",
-                            },
-                            "displayName":"Up", 
-                            "callback" : (data : any)=> {
-                                return data.price > 0;
-                            }
-                        }
-                    ],
-                    "others":
-                    {
-                        "properties": {
-                             "color": "#072A6C",
-                             "displayName":"Line",
-                        }
-                    }
-                }
-            },
-            valueAxis: {
-                visible: true,
-                title: {
-                    visible: false
-                }
-            },
-            timeAxis: {
-                interval : {
-                    unit : ''
-                }
-            },
-            title: {
-                visible: false
-            },
-            interaction: {
-                syncValueAxis: false
-            }
-        });
-  
+        Helper.makeChart(inputName, selectList, selectedMeasuresEntity, selectButton, selectGridList, "idVizFrameReviewWizard", this);
+    
      }
 
      onBackToWizard () : void { 
       (this?.getModel("wizModel") as JSONModel)?.setProperty("/visiblePage", true);
      }
 
-     onSaveChartBuilder() : void { 
+     onSaveChartBuilder () : void { 
+        const inputName : string = (this?.byId("_IDGenInput") as Input).getValue();
+        const selectType : string = (this?.byId("_IDGenSelectList1") as SelectList)?.getSelectedKey();
+        const selectDimension : string = (this.byId("_IDGenSegmentedButton1") as SegmentedButton)?.getSelectedKey(); 
+        const selectCoin : any = (this.byId("gridList") as GridList)?.getSelectedItem(); 
+        const selectedMeasures : string[] = (this?.byId("_IDGenMultiComboBox") as MultiComboBox)?.getSelectedKeys();
+        let symbolCoin : string = selectCoin.getContent().at(0).getAggregation("items").at(2).getProperty("text");
 
+        const entry = { 
+            name : inputName, 
+            type : selectType,
+            measures : selectedMeasures,
+            dimension : selectDimension,
+            coin : symbolCoin 
+        };
+
+        const modelUserChart : ODataModel = (this.getModel() as ODataModel);
+        const contextCreated : Context = modelUserChart.bindList("/UserChart").create(entry);
+
+        (contextCreated.created() as Promise<void>).then(() => { 
+            MessageToast.show("Chart was created succesfully.", {
+                duration: 3000
+            });
+
+            this._onResetWizard();
+        });
+
+     }
+
+     onSubmitChange(event : Input$LiveChangeEvent) : void { 
+        if((event.getParameter("value") as string).length >= 10) { 
+            (this?.getModel("wizModel") as JSONModel)?.setProperty("/inputState", "Success");
+            (this.byId("ChartName") as WizardStep).setValidated(true);
+        } else {  
+            (this?.getModel("wizModel") as JSONModel)?.setProperty("/inputState", "Error");
+        }
+     }
+
+     onMeasureStepChange(event : Event) : void { 
+        const measureStep : WizardStep = this.byId("MeasureStep") as WizardStep;
+        (event.getSource() as MultiComboBox).getSelectedKeys().length === 0 ? measureStep.setValidated(false) : measureStep.setValidated(true);
+     }
+
+     onGridListSelectionChange(event : ListBase$SelectionChangeEvent) { 
+        const coinStep : WizardStep= this.byId("CoinStep") as WizardStep;
+        (event.getSource() as ListBase).getSelectedItem() ? coinStep.setValidated(true) : coinStep.setValidated(false); 
+     }
+
+     _onResetWizard() : void { 
+        (this?.getModel("wizModel") as JSONModel)?.setProperty("/visiblePage", true);
+        (this?.getModel("wizModel") as JSONModel)?.setProperty("/inputState", "Information");
+
+        (this.byId("MeasureStep") as WizardStep).setValidated(false);
+        (this.byId("ChartName") as WizardStep).setValidated(false);
+
+        (this.byId("_IDGenInput") as Input).setValue(""); 
+        (this.byId("_IDGenSelectList1") as SelectList).setSelectedKey("area");
+        (this.byId("_IDGenMultiComboBox") as MultiComboBox).clearSelection();
+        (this.byId("_IDGenSegmentedButton1") as SegmentedButton).setSelectedButton("_IDGenSegmentedButtonItem");
+        (this.byId("gridList") as GridList).setSelectedItemById("");
      }
 }

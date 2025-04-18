@@ -3,6 +3,16 @@
     <f:DynamicPage id="Wizard" title="{i18n&gt;WizardTitle}" stickySubheaderProvider="ChartWizard" visible="{wizModel>/visiblePage}">
         <f:content>
             <Wizard id="ChartWizard" class="sapUiResponsivePadding--header sapUiResponsivePadding--content" complete="onCompletedWizard" height="auto" enableBranching="true">
+                <WizardStep id="ChartName" nextStep="ChartTypeStep" title="Configuration Name" icon="sap-icon://signature" validated="false">
+                     <FlexBox id="WizardStepSegmentedButtonFlexBox3" justifyContent="Center" alignItems="Center">
+                        <Input id="_IDGenInput"
+                            valueState="{wizModel>/inputState}"
+                            placeholder="My Chart ..."
+                            class="sapUiSmallMarginTopBottom"
+                            submit="onSubmitChange"
+                            change="onSubmitChange" />
+                    </FlexBox>
+                </WizardStep>
                 <WizardStep id="ChartTypeStep" nextStep="MeasureStep" title="Chart Type" icon="sap-icon://area-chart">
                 	<SelectList id="_IDGenSelectList1"
                         items="{
@@ -12,9 +22,9 @@
                         <core:ListItem id="_IDGenListItem" key="{code}" text="{name}" icon="{icon}"/>
                     </SelectList>
                 </WizardStep>
-                <WizardStep id="MeasureStep" title="Measure in Chart" nextStep="DimensionStep" icon="sap-icon://business-objects-experience">
+                <WizardStep id="MeasureStep" title="Measure in Chart" nextStep="DimensionStep" icon="sap-icon://business-objects-experience" validated="false">
                     <FlexBox id="WizardStepSegmentedButtonFlexBox2" justifyContent="Center" alignItems="Center">
-                        	<MultiComboBox id="_IDGenMultiComboBox"
+                        	<MultiComboBox id="_IDGenMultiComboBox" selectionChange="onMeasureStepChange"
                                 width="100%">
                                 <items>
                                     <core:Item id="_IDGenItem1" key="price" text="Price"/>
@@ -34,8 +44,8 @@
                         </SegmentedButton>
                     </FlexBox>  
                 </WizardStep>
-                <WizardStep id="CoinStep" title="Coins in Chart" icon="sap-icon://business-objects-experience">
-                    <f:GridList id="gridList" headerText="Pick Cryptocoin" mode="MultiSelect">
+                <WizardStep id="CoinStep" title="Coins in Chart" icon="sap-icon://business-objects-experience" validated="false">
+                    <f:GridList id="gridList" headerText="Pick Cryptocoin" mode="SingleSelectMaster" selectionChange="onGridListSelectionChange">
                         <f:GridListItem id="_IDGenGridListItem1" highlight="Information" type="Active" press="onPressGirdItem">
                             <VBox id="_IDGenVBox" class="sapUiSmallMargin">
                                 <core:Icon id="icon1" src="sap-icon://currency"></core:Icon>
@@ -69,7 +79,7 @@
                         <commons:ChartContainerContent id="_IDGenChartContainerContentReviewWizard">
                             <commons:content>
                             
-                                <viz:VizFrame id="idVizFrameReviewWizard" uiConfig="{applicationSet:'fiori'}" height="100%" width="100%" vizType="line" vizProperties="{ title: {text : 'Bitcoin', visible : true},                                     interaction: { syncValueAxis: false },                                      timeAxis: { title: { visible: false }, interval : { unit : ''} }                                     }">
+                                <viz:VizFrame id="idVizFrameReviewWizard" uiConfig="{applicationSet:'fiori'}" height="100%" width="100%" vizType="line" vizProperties="{ title: {text : 'Coin', visible : true},                                     interaction: { syncValueAxis: false },                                      timeAxis: { title: { visible: false }, interval : { unit : ''} }                                     }">
                                    <!-- <viz:feeds>
                                         <viz.feeds:FeedItem id="valueAxisFeedReviewWizard" uid="valueAxis" type="Measure" values="price"/>
                                         <viz.feeds:FeedItem id="categoryAxisFeedReviewWizard" uid="categoryAxis" type="Dimension" values="timestamp"/>
