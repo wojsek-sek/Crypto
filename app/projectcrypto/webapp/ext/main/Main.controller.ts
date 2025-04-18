@@ -14,6 +14,8 @@ import Context from "sap/ui/model/Context";
 import Event from "sap/ui/base/Event";
 import { DatePicker$ChangeEvent } from "sap/m/DatePicker";
 import DateRangeSelection from "sap/m/DateRangeSelection";
+import ODataContextBinding from "sap/ui/model/odata/v4/ODataContextBinding";
+import ContextBinding from "sap/ui/model/ContextBinding";
 
 
 
@@ -270,8 +272,12 @@ export default class Main extends Controller {
     }
 
     onSelectionUserChange (event : ComboBox$SelectionChangeEvent) { 
-        const context = event.getParameter("selectedItem")?.getBindingContext()?.getObject(); 
-        debugger;
+        const key : string = event.getParameter("selectedItem")?.getKey() as string; 
+        const context : ContextBinding= this.getModel()?.bindContext(`/UserChart(ID=${key})`) as ContextBinding;
+        const object = context.getBoundContext()?.getObject();
+        console.log(object)
+        debugger
+        
     }   
 
 

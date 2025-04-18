@@ -22,7 +22,7 @@
                         </layoutData>
                     </Button>
                     <ComboBox id="_IDGenMultiComboBox3" selectionChange="onSelectionUserChange" items="{ path: '/UserChart' }" width="90%">
-                        <core:Item id="lineChartItem3" key="{name}" text="{name}"/>
+                        <core:Item id="lineChartItem3" key="{ID}" text="{name}"/>
                         <layoutData>
                             <FlexItemData id="_IDGenFlexItemData7" growFactor="1"/>
                         </layoutData>
