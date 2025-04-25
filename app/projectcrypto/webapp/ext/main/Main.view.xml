@@ -21,8 +21,15 @@
                             <FlexItemData id="_IDGenFlexItemData1" growFactor="1"/>
                         </layoutData>
                     </Button>
-                    <ComboBox id="_IDGenMultiComboBox3" selectionChange="onSelectionUserChange" items="{ path: '/UserChart' }" width="90%">
-                        <core:Item id="lineChartItem3" key="{ID}" text="{name}"/>
+                    <ComboBox id="_IDGenMultiComboBox3" selectionChange="onSelectionUserChange" items="{ path: '/UserChart' }" width="90%" class="sapUiSmallMarginBegin">
+                        <core:Item id="lineChartItem3" key="{ID}" text="{name}">
+                            <core:customData>
+                                <core:CustomData key="type" value="{type}"></core:CustomData>
+                                <core:CustomData key="measures" value="{measures}"></core:CustomData>
+                                <core:CustomData key="dimension" value="{dimension}"></core:CustomData>
+                                <core:CustomData key="coin" value="{coin}"></core:CustomData>
+                            </core:customData>
+                        </core:Item>
                         <layoutData>
                             <FlexItemData id="_IDGenFlexItemData7" growFactor="1"/>
                         </layoutData>

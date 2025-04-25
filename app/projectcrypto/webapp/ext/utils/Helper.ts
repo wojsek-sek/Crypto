@@ -10,7 +10,7 @@ export default class Helper {
     public static makeChart(name : string, type : string, measures : string[], dimension : string, coin : string, id : string, that : Controller) : void{
         const selectList : string = type;
         const selectButton : string = dimension; 
-        const selectGridList : any = coin; 
+        const selectGridList : string = coin; 
         const selectedMeasuresEntity : string[] = measures;
         const measuresArray : any[] = [];
         const feedMeaasures : FeedItem[] = [];
@@ -24,9 +24,7 @@ export default class Helper {
             }
         });
     
-        let symbol : string = selectGridList.getContent().at(0).getAggregation("items").at(2).getProperty("text");
-    
-        let selectedCoin : Filter = new Filter({ path: "symbol", operator: FilterOperator.EQ, value1: symbol });
+        let selectedCoin : Filter = new Filter({ path: "symbol", operator: FilterOperator.EQ, value1: selectGridList });
          
         selectedMeasuresEntity.forEach((element) => { 
             measuresArray.push({

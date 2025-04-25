@@ -26,6 +26,7 @@ import ChartContainerContent from "sap/suite/ui/commons/ChartContainerContent";
 import ChartContainer from "sap/suite/ui/commons/ChartContainer";
 import ListBase, { ListBase$SelectionChangeEvent } from "sap/m/ListBase";
 import Helper from "../utils/Helper";
+import Routing from "sap/fe/core/controllerextensions/Routing";
 
 
 /**
@@ -74,7 +75,9 @@ export default class Wizard extends Controller {
         const selectGridList : any = (this.byId("gridList") as GridList)?.getSelectedItem(); 
         const selectedMeasuresEntity : string[] = (this?.byId("_IDGenMultiComboBox") as MultiComboBox)?.getSelectedKeys();
 
-        Helper.makeChart(inputName, selectList, selectedMeasuresEntity, selectButton, selectGridList, "idVizFrameReviewWizard", this);
+        let symbol : string = selectGridList.getContent().at(0).getAggregation("items").at(2).getProperty("text");
+
+        Helper.makeChart(inputName, selectList, selectedMeasuresEntity, selectButton, symbol, "idVizFrameReviewWizard", this);
     
      }
 
@@ -142,5 +145,8 @@ export default class Wizard extends Controller {
         (this.byId("_IDGenMultiComboBox") as MultiComboBox).clearSelection();
         (this.byId("_IDGenSegmentedButton1") as SegmentedButton).setSelectedButton("_IDGenSegmentedButtonItem");
         (this.byId("gridList") as GridList).setSelectedItemById("");
+
+        const router : Routing = this.getExtensionAPI().getRouting();
+        router.navigateToRoute("CryptoCurrenciesMain");
      }
 }

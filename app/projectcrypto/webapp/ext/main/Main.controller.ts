@@ -16,6 +16,7 @@ import { DatePicker$ChangeEvent } from "sap/m/DatePicker";
 import DateRangeSelection from "sap/m/DateRangeSelection";
 import ODataContextBinding from "sap/ui/model/odata/v4/ODataContextBinding";
 import ContextBinding from "sap/ui/model/ContextBinding";
+import Helper from "../utils/Helper";
 
 
 
@@ -23,6 +24,14 @@ import ContextBinding from "sap/ui/model/ContextBinding";
 type symbolType = { 
     symbol: string;
     name : string;
+}
+
+type chart = { 
+    name : string;
+    type : string; 
+    measures : string[];
+    dimension : string;
+    coin : string;
 }
 
 /**
@@ -265,18 +274,21 @@ export default class Main extends Controller {
                 ],
             and : true
         })
-        let Chart : VizFrame | any= this.byId("idVizFrame");
+        let Chart : VizFrame = this.byId("idVizFrame") as VizFrame;
         let ChartData : FlattenedDataset | any = Chart.getDataset();
 
         ChartData?.getBinding("data").filter(this.filtersWithDate);
     }
 
     onSelectionUserChange (event : ComboBox$SelectionChangeEvent) { 
-        const key : string = event.getParameter("selectedItem")?.getKey() as string; 
-        const context : ContextBinding= this.getModel()?.bindContext(`/UserChart(ID=${key})`) as ContextBinding;
-        const object = context.getBoundContext()?.getObject();
-        console.log(object)
-        debugger
+        const item  = event.getParameter("selectedItem"); 
+        const context : Context= item?.getBindingContext() as Context;
+        const object = context?.getObject() as chart;
+
+        const vizChart : VizFrame = this.byId("idVizFrame") as VizFrame; 
+        vizChart.destroyDataset(); 
+        vizChart.destroyFeeds();
+        Helper.makeChart(object.name, object.type, object.measures, object.dimension, object.coin, "idVizFrame", this);
         
     }   
 
